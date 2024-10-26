@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirusTotal Analysis Result</title>
+</head>
+<body>
+    <h1>File Analysis Results</h1>
+    <p><strong>File Name:</strong> {{ result.file_name }}</p>
+    <p><strong>File Size:</strong> {{ result.file_size }} KB</p>
+    <p><strong>File Type:</strong> {{ result.file_type }}</p>
+    <p><strong>Times Submitted:</strong> {{ result.times_submitted }}</p>
+    <p><strong>SHA256:</strong> {{ result.sha256 }}</p>
+    <p><strong>Engines Detected:</strong> {{ result.engines_detected }}</p>
+    <p><strong>Undetected Engines:</strong> {{ result.undetected_engines }}</p>
+
+    <h2>Engine Analysis Results:</h2>
+    <ul>
+        {% for engine in result.engine_results %}
+            <li>
+                <strong>Engine:</strong> {{ engine.engine_name }}<br>
+                <strong>Method:</strong> {{ engine.method }}<br>
+                <strong>Category:</strong> {{ engine.category }}<br>
+                <strong>Result:</strong> {{ engine.result }}<br>
+                <strong>Version:</strong> {{ engine.engine_version }}<br>
+                <br>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
