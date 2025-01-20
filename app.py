@@ -4,6 +4,8 @@ import hashlib
 import os
 
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB
+
 
 @app.route('/')
 def index():
