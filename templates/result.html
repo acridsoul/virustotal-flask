@@ -5,29 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VirusTotal Analysis Result</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>File Analysis Results</h1>
-    <p><strong>File Name:</strong> {{ result.file_name }}</p>
-    <p><strong>File Size:</strong> {{ result.file_size }} KB</p>
-    <p><strong>File Type:</strong> {{ result.file_type }}</p>
-    <p><strong>Times Submitted:</strong> {{ result.times_submitted }}</p>
-    <p><strong>SHA256:</strong> {{ result.sha256 }}</p>
-    <p><strong>Engines Detected:</strong> {{ result.engines_detected }}</p>
-    <p><strong>Undetected Engines:</strong> {{ result.undetected_engines }}</p>
+    <div class="container">
+        <h1>File Analysis Results</h1>
+        
+        <div class="result-container">
+            <div class="result-item">
+                <p><strong>File Name:</strong> {{ result.file_name }}</p>
+                <p><strong>File Size:</strong> {{ result.file_size }} KB</p>
+                <p><strong>File Type:</strong> {{ result.file_type }}</p>
+                <p><strong>Times Submitted:</strong> {{ result.times_submitted }}</p>
+                <p><strong>SHA256:</strong> {{ result.sha256 }}</p>
+                <p><strong>Engines Detected:</strong> {{ result.engines_detected }}</p>
+                <p><strong>Undetected Engines:</strong> {{ result.undetected_engines }}</p>
+            </div>
 
-    <h2>Engine Analysis Results:</h2>
-    <ul>
-        {% for engine in result.engine_results %}
-            <li>
-                <strong>Engine:</strong> {{ engine.engine_name }}<br>
-                <strong>Method:</strong> {{ engine.method }}<br>
-                <strong>Category:</strong> {{ engine.category }}<br>
-                <strong>Result:</strong> {{ engine.result }}<br>
-                <strong>Version:</strong> {{ engine.engine_version }}<br>
-                <br>
-            </li>
-        {% endfor %}
-    </ul>
+            {% if result.engine_results %}
+            <h2>Engine Analysis Results</h2>
+            <ul class="engine-results">
+                {% for engine in result.engine_results %}
+                    <li class="engine-item">
+                        <p><strong>Engine:</strong> {{ engine.engine_name }}</p>
+                        <p><strong>Method:</strong> {{ engine.method }}</p>
+                        <p><strong>Category:</strong> {{ engine.category }}</p>
+                        <p><strong>Result:</strong> {{ engine.result }}</p>
+                        <p><strong>Version:</strong> {{ engine.engine_version }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
 </body>
 </html>

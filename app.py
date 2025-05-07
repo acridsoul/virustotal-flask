@@ -6,6 +6,13 @@ import os
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB
 
+def calculate_hash(file_stream):
+    """Calculate SHA256 hash from file stream"""
+    file_hash = hashlib.sha256()
+    while chunk := file_stream.read(65536):  # Read in 64k chunks
+        file_hash.update(chunk)
+    file_stream.seek(0)  # Reset stream position for potential future reads
+    return file_hash.hexdigest()
 
 @app.route('/')
 def index():
@@ -21,11 +28,11 @@ def upload():
         return "No selected file", 400
     
     if file:
-        file_path = os.path.join('uploads', file.filename)
-        file.save(file_path)
-
+        # Calculate hash directly from the file stream
+        hash_value = calculate_hash(file.stream)
+        
+        # Get API key
         api_key = open('.env').read().strip()
-        hash_value = sha256sum(file_path)
         url = f"https://www.virustotal.com/api/v3/files/{hash_value}"
         headers = {
             "accept": "application/json",
@@ -56,7 +63,6 @@ def upload():
                     engine_version = result.get('engine_version')
                     category = result.get('category')
                     results = result.get('result')
-                    
 
                     result_data['engine_results'].append({
                         "method": method,
@@ -70,14 +76,5 @@ def upload():
         else:
             return f"Error: {response.status_code} - {response.json().get('error', {}).get('message', 'Unknown error')}", 400
 
-def sha256sum(filename):
-    with open(filename, "rb") as f:
-        file_hash = hashlib.sha256()
-        while chunk := f.read(65536):
-            file_hash.update(chunk)
-    return file_hash.hexdigest()
-
 if __name__ == '__main__':
-    if not os.path.exists('uploads'):
-        os.makedirs('uploads')
     app.run(debug=True)
